@@ -1,0 +1,9 @@
+{% extends "index.html" %}
+{% block title %}URL Shortener API{% endblock %}
+
+{% block content %}
+<form method="POST">
+    <input type="url" name="url_to_shorten" placeholder="https://www.example.com" required>
+    <button type="submit">Shorten URL</button> 
+</form>
+{% endblock %}
