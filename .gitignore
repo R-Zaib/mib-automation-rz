@@ -5,3 +5,5 @@ w3/rp_flask_api/__pycache__
 w3/url_flask_api/url_api/
 w3/url_flask_api/venv/
 w3/url_flask_api/__pycache__
+w3/url_shortener_api/__pycache__/
+w3/url_shortener_api/venv/
