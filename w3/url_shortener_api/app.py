@@ -6,6 +6,7 @@ import json
 
 app = Flask(__name__)
 
+json_file_path = "shortcodes.json"
 
 def load_shortcodes():
     try:
@@ -26,11 +27,11 @@ def generate_random_shortcode():
     shortcode = ''.join(random.sample(characters, max_length))
     return shortcode
 
-# checking the shortcodes in use using dummy data for now, will update later 
+# checking the shortcodes in use using load_shortcodes 
 # to take in parameter from the request_data variable
 def in_use_shortcode(shortcode):
-    shortcode_in_use = ["9pqIug", "voyExA", "dSFugI", "nb0C9h", "P7c_Ez", "abc123"]
-    return shortcode in shortcode_in_use
+    existing_data = load_shortcodes()
+    return shortcode in existing_data
 
 # https://www.w3schools.com/python/ref_string_isalnum.asp
 def is_valid_shortcode(shortcode):
@@ -52,25 +53,25 @@ def is_valid_shortcode(shortcode):
 def shorten_url():
     request_data = request.get_json()
 
-    get_url = request_data.get("url")
-    get_shortcode = request_data.get("shortcode")
+    url = request_data.get("url")
+    shortcode = request_data.get("shortcode")
     
     #checking whether url is present
-    if not get_url:
+    if not url:
         abort(400, description = "Url not present") 
         
-    if get_shortcode is None:
-        get_shortcode = generate_random_shortcode()
+    if shortcode is None:
+        shortcode = generate_random_shortcode()
 
-    elif get_shortcode in request_data:
-        if not is_valid_shortcode(get_shortcode):
+    elif shortcode in request_data:
+        if not is_valid_shortcode(shortcode):
             abort(412, description = "The provided shortcode is invalid") 
         
-        if in_use_shortcode(get_shortcode):
+        if in_use_shortcode(shortcode):
             abort(409, description = "Shortcode already in use")
         
 
-    return jsonify({"shortcode": get_shortcode}), 201
+    return jsonify({"shortcode": shortcode}), 201
 
 if __name__ == "__main__":
     app.run(debug=True, port=5000)
