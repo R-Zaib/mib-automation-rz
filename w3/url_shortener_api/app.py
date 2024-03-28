@@ -7,12 +7,12 @@ from datetime import datetime
 
 app = Flask(__name__)
 
-json_filepath = "shortcodes.json"
+json_file_path = "shortcodes.json"
 
 
 def load_shortcodes():
     try:
-        with open(json_filepath, 'r') as file:
+        with open(json_file_path, 'r') as file:
             data = json.load(file)
         return data
     except FileNotFoundError:
@@ -20,7 +20,7 @@ def load_shortcodes():
 
 
 def save_shortcodes(data):
-    with open(json_filepath, 'w') as file:
+    with open(json_file_path, 'w') as file:
         json.dump(data, file, indent=2)
 
 
@@ -36,12 +36,13 @@ def generate_random_shortcode():
 # checking the shortcodes in use using load_shortcodes 
 def in_use_shortcode(shortcode):
     existing_data = load_shortcodes()
-    return shortcode in existing_data # https://www.w3schools.com/python/ref_string_isalnum.asp
+    return shortcode in existing_data 
+# https://www.w3schools.com/python/ref_string_isalnum.asp
 
 
 def is_valid_shortcode(shortcode):
-    valid_characters = shortcode.isalnum() or "_" in shortcode
-    return len(shortcode)==6 and valid_characters
+    valid_characters = set(string.ascii_letters + string.digits + "_")
+    return len(shortcode)==6 and all(char in valid_characters for char in shortcode) 
 
 
 def retrieve_url(shortcode):
